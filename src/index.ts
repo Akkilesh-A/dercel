@@ -4,10 +4,13 @@ import simpleGit from "simple-git";
 import { generateRandomString } from "./utils";
 import path from "path"
 import { getAllFiles } from "./file";
+import { uploadFile } from "./aws";
+import dotenv from "dotenv";
 
 const app=express()
 app.use(express.json())
 app.use(cors())
+dotenv.config()
 
 app.get("/",(req,res)=>{
     res.status(200).json({
@@ -21,11 +24,12 @@ app.post("/deploy", async (req, res) => {
     await simpleGit().clone(repoUrl, path.join(__dirname, `output/${id}`));
 
     const files = getAllFiles(path.join(__dirname, `output/${id}`));
-    console.log(files);
+    // console.log(files);
 
-    // files.forEach(async file => {
-    //     await uploadFile(file.slice(__dirname.length + 1), file);
-    // })
+    files.forEach(async file => {
+        let normalizedPath = file.replace(/\\/g, '/');
+        await uploadFile(normalizedPath.slice(__dirname.length + 1), file);
+    })
 
     // await new Promise((resolve) => setTimeout(resolve, 5000))
     // publisher.lPush("build-queue", id);

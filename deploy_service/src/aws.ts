@@ -50,6 +50,7 @@ export function copyFinalDist(id: string) {
     allFiles.forEach(file => {
         uploadFile(`dist/${id}/` + file.slice(folderPath.length + 1), file);
     })
+    console.log(`uploaded into dist ${id}`);
 }
 
 const getAllFiles = (folderPath: string) => {
@@ -73,5 +74,5 @@ const uploadFile = async (fileName: string, localFilePath: string) => {
         Bucket: "vercel-clone-bucket",
         Key: fileName,
     }).promise();
-    console.log(response);
+    // console.log(response);
 }

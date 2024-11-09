@@ -35,7 +35,7 @@ app.post("/deploy", async (req, res) => {
         await uploadFile(normalizedPath.slice(__dirname.length + 1), file);
     })
 
-    // await new Promise((resolve) => setTimeout(resolve, 5000))
+    await new Promise((resolve) => setTimeout(resolve, 5000))
     publisher.lPush("build-queue", id);
     console.log("Id after pushing to redis:",id)
 

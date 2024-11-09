@@ -5,12 +5,16 @@ import { generateRandomString } from "./utils";
 import path from "path"
 import { getAllFiles } from "./file";
 import { uploadFile } from "./aws";
-import dotenv from "dotenv";
+import { createClient } from "redis";
+const publisher = createClient();
+publisher.connect();
+
+// const subscriber = createClient();
+// subscriber.connect();
 
 const app=express()
 app.use(express.json())
 app.use(cors())
-dotenv.config()
 
 app.get("/",(req,res)=>{
     res.status(200).json({
@@ -32,7 +36,8 @@ app.post("/deploy", async (req, res) => {
     })
 
     // await new Promise((resolve) => setTimeout(resolve, 5000))
-    // publisher.lPush("build-queue", id);
+    publisher.lPush("build-queue", id);
+    console.log("Id after pushing to redis:",id)
 
     // publisher.hSet("status", id, "uploaded");
 
